@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:football_shop_mobile/widgets/left_drawer.dart';
+import 'package:football_shop_mobile/widgets/products_card.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -8,14 +10,15 @@ class MyHomePage extends StatelessWidget {
     final String kelas = "B"; //kelas
 
     final List<ItemHomepage> items = [
-        ItemHomepage("All Products", Icons.storefront, Colors.blue),
-        ItemHomepage("My Products", Icons.person, Colors.green),
-        ItemHomepage("Create Product", Icons.add, Colors.red),
+        ItemHomepage("All Products", Icons.storefront, const Color.fromARGB(255, 133, 120, 101)),
+        ItemHomepage("My Products", Icons.person, const Color.fromARGB(255, 207, 154, 105)),
+        ItemHomepage("Create Product", Icons.add, const Color.fromARGB(162, 32, 96, 2)),
       ];
 
     @override
     Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 208, 201, 201),
       appBar: AppBar(
         title: const Text(
           'Football Shop',
@@ -25,8 +28,10 @@ class MyHomePage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: const Color.fromARGB(255, 82, 91, 89),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
+      drawer: LeftDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -49,10 +54,12 @@ class MyHomePage extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.only(top: 16.0),
                     child: Text(
-                      'Selamat datang di Football Shop',
+                      'Wellcome to Football Shop',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+                        color: Color.fromARGB(255, 82, 91, 89),
+                        fontFamily: 'ArchivoBlack',
+                        fontWeight: FontWeight.normal,
+                        fontSize: 25.0,
                       ),
                     ),
                   ),
@@ -88,6 +95,7 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Color.fromARGB(255, 123, 136, 134),
       elevation: 2.0,
       child: Container(
         width: MediaQuery.of(context).size.width / 3.5, // menyesuaikan dengan lebar device yang digunakan.
@@ -96,10 +104,14 @@ class InfoCard extends StatelessWidget {
           children: [
             Text(
               title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
             ),
             const SizedBox(height: 8.0),
-            Text(content),
+            Text(
+              content,
+              style: TextStyle(color: Colors.white),),
           ],
         ),
       ),
@@ -115,51 +127,3 @@ class ItemHomepage {
  ItemHomepage(this.name, this.icon, this.color);
 }
 
-class ItemCard extends StatelessWidget {
-
-  final ItemHomepage item; 
-
-  const ItemCard(this.item, {super.key}); 
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: item.color,
-      borderRadius: BorderRadius.circular(12),
-
-      child: InkWell(
-        onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
-            );
-        },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'ArchivoBlack'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-}

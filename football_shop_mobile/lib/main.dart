@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:football_shop_mobile/home_page.dart';
+import 'package:football_shop_mobile/screens/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Football Shop',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 124, 42, 14)),
       ),
       home: MyHomePage(),
     );

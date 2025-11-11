@@ -27,3 +27,20 @@
 
 6. **Hot Reload dan Hot Restart**
     Hot reload adalah fitur Flutter yang memungkinkan pengembang memperbarui tampilan aplikasi dengan cepat tanpa kehilangan state yang sedang berjalan. Misalnya, ketika ingin mengubah teks atau warna, cukup tekan “hot reload” dan aplikasi langsung menampilkan perubahan tanpa memulai ulang. Sedangkan hot restart akan me-restart seluruh aplikasi dari awal, termasuk menghapus semua state yang tersimpan. Hot reload lebih cepat untuk perubahan kecil pada UI, sementara hot restart digunakan jika ada perubahan besar pada struktur aplikasi.
+
+
+**TUGAS 8**
+
+1. **Perbedaan Navigator.push() dan Navigator.pushReplacement()**
+    Navigator.push() menambahkan halaman baru ke dalam stack sehingga use dapat kembali ke halaman sebelumnya. Sementara itu, Navigator.pushReplacement() menggantikan halaman aktif dengan halaman baru dan menghapus halaman sebelumnya dari stack. Pada aplikasi Football Shop, push() digunakan untuk navigasi yang membutuhkan opsi kembali seperti melihat detail produk, sedangkan pushReplacement() digunakan pada alur final seperti setelah login atau checkout.
+
+2. **Pemanfaatan Scaffold, AppBar, dan Drawer**
+    Struktur halaman aplikasi dibangun menggunakan Scaffold sebagai kerangka utama yang menyediakan area konten dan slot navigasi. AppBar memastikan setiap halaman memiliki header yang seragam dan mudah dikenali. Drawer berperan sebagai navigasi samping yang konsisten sehingga user dapat berpindah fitur tanpa mengubah struktur halaman inti.
+
+3. **Kelebihan Padding, SingleChildScrollView, dan ListView dalam Form**
+    1. Padding digunakan untuk memberi jarak antar komponen agar tampilan form lebih rapi dan mudah dibaca. 
+    2. SingleChildScrollView memungkinkan seluruh elemen form tetap dapat diakses meskipun layar perangkat terbatas. 
+    3. ListView membantu menata input field secara vertikal dengan kemampuan scroll otomatis yang responsif.
+
+4. **Penyesuaian Tema Warna untuk Identitas Aplikasi**
+    Penyesuaian tema dilakukan menggunakan ThemeData sebagai palet warna utama coklat agar aplikasi memiliki palet warna yang konsisten dengan brand Football Shop. Selebihnya, terdapat beberapa warna pendukung yang masih dalam satu tone untuk diterapkan pada elemen dan tombol untuk memperkuat identitas visual. Konsistensi warna ini membantu menciptakan pengalaman user yang lebih nyaman dan mudah dikenali.
