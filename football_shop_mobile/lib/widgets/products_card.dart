@@ -1,6 +1,10 @@
+import 'package:football_shop_mobile/screens/login.dart';
+import 'package:football_shop_mobile/screens/products_entry_list.dart';
 import 'package:flutter/material.dart';
 import 'package:football_shop_mobile/screens/home_page.dart';
 import 'package:football_shop_mobile/screens/productslist_form.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class ItemCard extends StatelessWidget {
 
@@ -15,15 +19,46 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
 
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
               SnackBar(content: Text("You have pressed button ${item.name}!"))
             );
           // Navigate ke route yang sesuai (tergantung jenis tombol)
-          if (item.name == "Create Product") {
+          if (item.name == "All Products") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProductsEntryListPage()
+              ),
+            );
+          }
+          else if (item.name == "Create Product") {
             Navigator.push(context, MaterialPageRoute(builder: (context) => ProductsFormPage()));
+          }
+          else if (item.name == "Logout") {
+            final response = await context.read<CookieRequest>().logout(
+              "http://127.0.0.1:8000/auth/logout/");
+            String message = response["message"];
+            if (context.mounted) {
+              if (response['status']) {
+                String uname = response["username"];
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("$message See you again, $uname."),
+                ));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(message),
+                  ),
+                );
+              }
+            }
           }
         },
         child: Container(

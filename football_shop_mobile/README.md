@@ -44,3 +44,38 @@
 
 4. **Penyesuaian Tema Warna untuk Identitas Aplikasi**
     Penyesuaian tema dilakukan menggunakan ThemeData sebagai palet warna utama coklat agar aplikasi memiliki palet warna yang konsisten dengan brand Football Shop. Selebihnya, terdapat beberapa warna pendukung yang masih dalam satu tone untuk diterapkan pada elemen dan tombol untuk memperkuat identitas visual. Konsistensi warna ini membantu menciptakan pengalaman user yang lebih nyaman dan mudah dikenali.
+
+**TUGAS 9**
+
+1. **Mengapa perlu membuat model Dart saat mengambil/mengirim JSON**
+    Membuat model Dart (kelas typed) memaksa struktur data yang konsisten antara backend dan frontend sehingga validasi tipe dan null-safety bisa dilakukan lebih awal. Tanpa model dan hanya memakai Map<String, dynamic> kita akan kehilangan pemeriksaan tipe otomatis, penamaan field raw mudah typo, dan kode menjadi sulit dirawat karena pemetaan/konversi tersebar di banyak tempat. Dengan model, IDE dapat membantu refactor, kode jadi lebih mudah diuji dan dipelihara.
+
+2. **Fungsi package http dan CookieRequest serta perbedaannya**
+    Package http adalah klien HTTP general-purpose untuk mengirim GET/POST/PUT/DELETE tanpa pengelolaan sesi/cookie otomatis. Package ini cocok untuk permintaan stateless atau API sederhana. CookieRequest (dari pbp_django_auth) membungkus mekanisme HTTP dengan pengelolaan cookie/CSRF dan helper login/logout sehingga autentikasi berbasis session di Django bekerja mulus dari Flutter.
+
+3. **Mengapa instance CookieRequest perlu dibagikan ke semua komponen**
+    Cookie/session adalah state aplikasi (session cookie, header CSRF) yang harus konsisten di seluruh widget supaya setiap request membawa kredensial yang sama. Membagikan satu instance dapat mencegah duplikasi dan mismatch cookie. Dengan Provider, semua halaman bisa mengakses CookieRequest yang sama tanpa harus passing parameter manual, memudahkan login/logout global.
+
+4. **Konfigurasi konektivitas antara Flutter dan Django (10.0.2.2, CORS, SameSite, Android INTERNET)**
+    1. Android emulator menggunakan 10.0.2.2 untuk mengakses host machine sehingga alamat ini harus ditambahkan ke ALLOWED_HOSTS agar request dari emulator diterima. Tanpa hal tersebut, permintaan akan ditolak. 
+    2. CORS harus diaktifkan dan pengaturan cookie (SameSite, Secure) disesuaikan supaya browser/emulator mengizinkan pengiriman cookie lintas-origin (mis. SameSite=None + Secure untuk HTTPS, atau Secure=False untuk localhost/test). Jika salah konfigurasi, maka cookie session/CSRF tidak dikirim dan autentikasi gagal. 
+    3. Android butuh izin INTERNET di AndroidManifest.xml agar aplikasi bisa melakukan network request. Tanpa izin tersebut, request tidak akan pernah keluar.
+
+5. **Mekanisme pengiriman data dari input sampai tampil di Flutter**
+    1. User memasukkan data pada form Flutter, aplikasi membuat JSON/body request dan memanggil endpoint Django, lalu Django memproses input (validasi, simpan ke DB) dan mengembalikan response JSON. 
+    2. Flutter menerima response, meng-decode JSON menjadi model Dart (atau Map), lalu memperbarui state/UI (setState/Provider) sehingga data baru ditampilkan di layar. 
+    3. Jika menggunakan model, parsing dan validasi tipe dilakukan pada tahap decoding sehingga UI hanya menerima data yang telah tervalidasi.
+
+6. **Mekanisme autentikasi (register → login → logout)**
+    1. Register: Flutter mengirim data/register JSON ke endpoint register Django, Django membuat user dan mereturn status sukses.
+    2. Login: Flutter memanggil CookieRequest.login atau POST ke endpoint login, Django memvalidasi kredensial, membuat session dan mengirim session cookie (serta CSRF cookie jika perlu) yang disimpan CookieRequest, sehingga request berikutnya membawa cookie itu dan Django mengenali user sebagai authenticated. 
+    3. Logout: Flutter memanggil endpoint logout (POST), Django menghapus session dan mereturn status, lalu CookieRequest membersihkan cookie lokal sehingga aplikasi kembali ke tampilan logged-out.
+
+7. **Langkah implementasi checklist (step-by-step singkat)**
+    1. Update proyek Django salah satunya menambahkan app authenticate, dan sesuaikan dengan kebutuhan Flutter.
+    2. Mengimplementasikan fitur login, register, logout pada proyek Flutter.
+    3. Menambahkan halaman login, register, products_entry_list (berisi list products_card yang mengandung name, price, description, thumbnail, category, is_featured), products_detail (dapat diakses dengan menekan products_card pada products_entry_list, menampilkan seluruh atribut pada model termasuk productViews, dan dapat kembali ke products_entry_list).
+    4. Membuat model kustom pada proyek Flutter sesuai proyek Django.
+    5. Mengintegrasikan sistem autentikasi Django dengan proyek Flutter.
+    6. Memberikan filter pada products_entry_list dengan hanya menampilkan produk user yang sedang login (user itu sendiri/dapat dianggap My Products)
+

@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'package:football_shop_mobile/screens/home_page.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:football_shop_mobile/widgets/left_drawer.dart';
 
@@ -13,21 +17,23 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
     String _name = "";
     double _price = 10.0; // default
     String _description = "";
-    String _category = "update"; // default
+    String _category = "Jerseys/Kits"; // default
     String _thumbnail = "";
     bool _isFeatured = false; // default
 
     final List<String> _categories = [
-      'transfer',
-      'update',
-      'exclusive',
-      'match',
-      'rumor',
-      'analysis',
+      'Jerseys/Kits',
+      'Training Gear',
+      'Footwear',
+      'Equipment',
+      'Accessories',
+      'Merchandise',
     ];
+    
 
     @override
     Widget build(BuildContext context) {
+      final request = context.watch<CookieRequest>();
       return Scaffold(
         backgroundColor: Color.fromARGB(255, 208, 201, 201),
         appBar: AppBar(
@@ -239,40 +245,37 @@ class _ProductsFormPageState extends State<ProductsFormPage> {
                         backgroundColor:
                             WidgetStateProperty.all(Color.fromARGB(162, 32, 96, 2)),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('The Product has been successfully saved!'),
-                                content: SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('Name: $_name'),
-                                      Text('Price: $_price'),
-                                      Text('Description: $_description'),
-                                      Text('Category: $_category'),
-                                      Text('Thumbnail: $_thumbnail'),
-                                      Text('Featured: ${_isFeatured ? "Yes" : "No"}'),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    child: const Text('OK'),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      _formKey.currentState!.reset();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
+                          final response = await request.postJson(
+                            "http://127.0.0.1:8000/create-flutter/",
+                            jsonEncode({
+                              "name": _name,
+                              "price": _price,
+                              "description": _description,
+                              "thumbnail": _thumbnail,
+                              "category": _category,
+                              "is_featured": _isFeatured,
+                            }),
                           );
-                      
+                          if (context.mounted) {
+                            if (response['status'] == 'success') {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("News successfully saved!"),
+                              ));
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyHomePage()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Something went wrong, please try again."),
+                              ));
+                            }
+                          }
                         }
                       },
                       child: const Text(
